@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('/invoices', 'InvoiceController');
+Route::group(['prefix' => 'invoices'], function () {
+    Route::apiResource('/{invoice}/items', 'ItemController');
+    Route::apiResource('/{invoice}/{item}/products', 'ProductController');
+});
