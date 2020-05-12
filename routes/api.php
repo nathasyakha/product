@@ -18,30 +18,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('login', 'UserController@login');
+Route::post('register', 'UserController@register');
+
 //User
-Route::get('users', 'UserController@index');
-Route::get('/users/{id}', 'UserController@show');
-Route::post('users', 'UserController@store');
-Route::put('/users/{id}', 'UserController@update');
-Route::delete('users/{id}', 'UserController@destroy');
-
-//Invoice
-Route::get('invoices', 'InvoiceController@index');
-Route::get('/invoices/{id}', 'InvoiceController@show');
-Route::post('invoices', 'InvoiceController@store');
-Route::put('/invoices/{id}', 'InvoiceController@update');
-Route::delete('/invoices/{id}', 'InvoiceController@destroy');
-
-//Product
-Route::get('products', 'ProductController@index');
-Route::get('/products/{id}', 'ProductController@show');
-Route::post('products', 'ProductController@store');
-Route::put('/products/{id}', 'ProductController@update');
-Route::delete('products/{id}', 'ProductController@destroy');
-
-//Item
-Route::get('items', 'ItemController@index');
-Route::get('/items/{id}', 'ItemController@show');
-Route::post('items', 'ItemController@store');
-Route::put('/items/{id}', 'ItemController@update');
-Route::delete('/items/{id}', 'ItemController@destroy');
+Route::middleware('auth:api')->group(function () {
+    Route::resource('user', 'UserController');
+    Route::resource('invoice', 'InvoiceController');
+    Route::resource('product', 'ProductController');
+    Route::resource('item', 'ItemController');
+});
