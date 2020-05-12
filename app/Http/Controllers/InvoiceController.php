@@ -14,7 +14,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
+        return Invoice::all();
     }
 
     /**
@@ -24,7 +24,6 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -35,7 +34,21 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required',
+            'invoiceDate' => 'required',
+            'invoiceDue' => 'required',
+        ]);
+
+        $invoice = $request->all();
+        $invo = Invoice::create($invoice);
+        $invo->save();
+        if ($invo) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Invoice Created'
+            ]);
+        }
     }
 
     /**
@@ -44,9 +57,10 @@ class InvoiceController extends Controller
      * @param  \App\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function show(Invoice $invoice)
+    public function show($id)
     {
-        //
+        $invoice = Invoice::find($id);
+        return $invoice;
     }
 
     /**
@@ -67,9 +81,20 @@ class InvoiceController extends Controller
      * @param  \App\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Invoice $invoice)
+    public function update(Request $request, $id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+
+        $invoice->user_id = $request->user_id;
+        $invoice->invoiceDate = $request->invoiceDate;
+        $invoice->invoiceDue = $request->invoiceDue;
+
+        $invoice->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice Updated'
+        ]);
     }
 
     /**
@@ -78,8 +103,14 @@ class InvoiceController extends Controller
      * @param  \App\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Invoice $invoice)
+    public function destroy($id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+        $invoice->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice Deleted'
+        ]);
     }
 }

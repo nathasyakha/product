@@ -14,7 +14,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        //
+        return Item::all();
     }
 
     /**
@@ -35,7 +35,22 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'invoice_id' => 'required',
+            'item' => 'required',
+            'product_id' => 'required',
+            'quantity' => 'required',
+        ]);
+
+        $items = $request->all();
+        $item = Item::create($items);
+        $item->save();
+        if ($item) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Item Created'
+            ]);
+        }
     }
 
     /**
@@ -44,11 +59,11 @@ class ItemController extends Controller
      * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public function show($id)
     {
-        //
+        $items = Item::find($id);
+        return $items;
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -67,9 +82,21 @@ class ItemController extends Controller
      * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function update(Request $request, $id)
     {
-        //
+        $items = Item::findOrFail($id);
+
+        $items->invoice_id = $request->invoice_id;
+        $items->item = $request->item;
+        $items->product_id = $request->product_id;
+        $items->quantity = $request->quantity;
+
+        $items->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item Updated'
+        ]);
     }
 
     /**
@@ -78,8 +105,14 @@ class ItemController extends Controller
      * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public function destroy($id)
     {
-        //
+        $items = Item::findOrFail($id);
+        $items->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item Deleted'
+        ]);
     }
 }
