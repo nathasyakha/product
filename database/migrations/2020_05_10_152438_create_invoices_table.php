@@ -17,8 +17,8 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
-            $table->timestamp('invoiceDate')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('invoiceDue')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->string('invoiceDate');
+            $table->string('invoiceDue');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
