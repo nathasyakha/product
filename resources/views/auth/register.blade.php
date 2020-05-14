@@ -24,12 +24,11 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="lastname" class="col-md-4 col-form-label text-md-right">{{ __('Last Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="lastname" type="lastname" class="form-control @error('lastname') is-invalid @enderror" name="lastname" value="{{ old('lastname') }}" required autocomplete="lastname">
+                                <input id="lastname" type="text" class="form-control @error('lastname') is-invalid @enderror" name="lastname" value="{{ old('lastname') }}" required autocomplete="lastname" autofocus>
 
                                 @error('lastname')
                                 <span class="invalid-feedback" role="alert">
@@ -38,12 +37,11 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="street" class="col-md-4 col-form-label text-md-right">{{ __('Street') }}</label>
 
                             <div class="col-md-6">
-                                <input id="street" type="street" class="form-control @error('street') is-invalid @enderror" name="street" value="{{ old('street') }}" required autocomplete="street">
+                                <input id="street" type="text" class="form-control @error('street') is-invalid @enderror" name="street" value="{{ old('street') }}" required autocomplete="street" autofocus>
 
                                 @error('street')
                                 <span class="invalid-feedback" role="alert">
@@ -52,12 +50,11 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="postalcode" class="col-md-4 col-form-label text-md-right">{{ __('Postal Code') }}</label>
 
                             <div class="col-md-6">
-                                <input id="postalcode" type="postalcode" class="form-control @error('postalcode') is-invalid @enderror" name="postalcode" value="{{ old('postalcode') }}" required autocomplete="postalcode">
+                                <input id="postalcode" type="text" class="form-control @error('postalcode') is-invalid @enderror" name="postalcode" value="{{ old('postalcode') }}" required autocomplete="postalcode" autofocus>
 
                                 @error('postalcode')
                                 <span class="invalid-feedback" role="alert">
@@ -66,12 +63,11 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="city" class="col-md-4 col-form-label text-md-right">{{ __('City') }}</label>
 
                             <div class="col-md-6">
-                                <input id="city" type="city" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ old('city') }}" required autocomplete="city">
+                                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ old('city') }}" required autocomplete="city" autofocus>
 
                                 @error('city')
                                 <span class="invalid-feedback" role="alert">
@@ -80,12 +76,11 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
-                            <label for="countryID" class="col-md-4 col-form-label text-md-right">{{ __('Country ID') }}</label>
+                            <label for="countryID" class="col-md-4 col-form-label text-md-right">{{ __('CountryID') }}</label>
 
                             <div class="col-md-6">
-                                <input id="countryID" type="countryID" class="form-control @error('countryID') is-invalid @enderror" name="countryID" value="{{ old('countryID') }}" required autocomplete="countryID">
+                                <input id="countryID" type="text" class="form-control @error('countryID') is-invalid @enderror" name="countryID" value="{{ old('countryID') }}" required autocomplete="countryID" autofocus>
 
                                 @error('countryID')
                                 <span class="invalid-feedback" role="alert">
@@ -94,7 +89,6 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

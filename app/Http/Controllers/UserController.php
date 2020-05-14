@@ -74,6 +74,16 @@ class UserController extends Controller
     }
 
 
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+        $response = [
+            'success' => true,
+            'message' => 'You have been succesfully logged out!',
+        ];
+        return response()->json($response, 200);
+    }
+
     public function index()
     {
         return User::all();
