@@ -14,7 +14,21 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return Item::all();
+        $item = Item::all();
+        if (request()->ajax()) {
+            return datatables()->of($item)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-info btn-sm editItem"><i class="far fa-edit"></i> Edit</a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<button type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm"><i class="far fa-trash-alt"></i> Delete</button>';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('item');
     }
 
     /**
@@ -35,22 +49,19 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'invoice_id' => 'required',
-            'item' => 'required',
-            'product_id' => 'required',
-            'quantity' => 'required',
-        ]);
+        $item = Item::updateOrCreate(
+            [
+                'id' => $request->id
+            ],
+            [
+                'invoice_id'  => $request->invoice_id,
+                'item' => $request->item,
+                'product_id'  => $request->product_id,
+                'quantity' => $request->quantity
+            ]
+        );
 
-        $items = $request->all();
-        $item = Item::create($items);
-        $item->save();
-        if ($item) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Item Created'
-            ]);
-        }
+        return response()->json(['success' => 'Item created successfully.', 'data' => $item]);
     }
 
     /**
@@ -82,21 +93,10 @@ class ItemController extends Controller
      * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        $items = Item::findOrFail($id);
-
-        $items->invoice_id = $request->invoice_id;
-        $items->item = $request->item;
-        $items->product_id = $request->product_id;
-        $items->quantity = $request->quantity;
-
-        $items->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Item Updated'
-        ]);
+        $item = Item::find($id);
+        return response()->json($item);
     }
 
     /**

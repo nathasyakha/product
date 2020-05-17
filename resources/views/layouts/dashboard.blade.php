@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Simulasi</title>
 
@@ -19,6 +20,7 @@
     <link rel="stylesheet" href="{{asset('/dist/css/adminlte.min.css')}}">
     <!-- Google Font: Source Sans Pro -->
     <link href="{{asset('/css.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" integrity="sha256-pODNVtK3uOhL8FUNWWvFQK0QoQoV3YA9wGGng6mbZ0E=" crossorigin="anonymous" />
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -188,7 +190,7 @@ to get the desired effect
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/gallery.html" class="nav-link">
+                            <a href="{{ url('product') }}" class="nav-link">
 
                                 <p style="font-size: 20px">
                                     Products
@@ -196,7 +198,7 @@ to get the desired effect
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/gallery.html" class="nav-link">
+                            <a href="{{ url('item') }}" class="nav-link">
 
                                 <p style="font-size: 20px">
                                     Items
@@ -244,6 +246,8 @@ to get the desired effect
     <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('jquery.validate.min.js')}}" integrity="sha256-sPB0F50YUDK0otDnsfNHawYmA5M0pjjUf4TvRJkGFrI=" crossorigin="anonymous"></script>
+    <script src="{{('sweetalert2@9.js')}}"></script>
     <!-- AdminLTE -->
     <script src="{{asset('/dist/js/adminlte.js')}}"></script>
 
@@ -252,8 +256,6 @@ to get the desired effect
     <script src="{{asset('/dist/js/demo.js')}}"></script>
     <script src="{{asset('/dist/js/pages/dashboard3.js')}}"></script>
 
-    <!-- Icon -->
-    <script src="{{asset('/product.js')}}"></script>
 </body>
 
 </html>

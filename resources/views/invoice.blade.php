@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>Simulasi</title>
 
@@ -20,19 +21,10 @@
   <!-- Google Font: Source Sans Pro -->
   <link href="{{asset('/css.css')}}" rel="stylesheet">
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to to the body tag
-to get the desired effect
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
 
 <body class="hold-transition sidebar-mini">
-  <div class="wrapper">
+
+  <body class="wrapper">
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <!-- Left navbar links -->
@@ -188,7 +180,7 @@ to get the desired effect
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
+              <a href="{{ url('product') }}" class="nav-link">
 
                 <p style="font-size: 20px">
                   Products
@@ -196,7 +188,7 @@ to get the desired effect
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/gallery.html" class="nav-link">
+              <a href="{{ url('item') }}" class="nav-link">
 
                 <p style="font-size: 20px">
                   Items
@@ -217,7 +209,7 @@ to get the desired effect
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Invoice</h1>
+              <h1>Invoices</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -235,7 +227,7 @@ to get the desired effect
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h4><a href="{{url('addInvoice')}}" class="btn btn-primary pull-right" style="margin-top: -8px">Add Invoice</a></h4>
+                <h4><a href="javascript:void(0)" id="add-invoice" class="btn btn-primary pull-right" style="margin-top: -8px">Add Invoice</a></h4>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -258,6 +250,47 @@ to get the desired effect
       </section>
     </div>
 
+    <!--Modal Invoice-->
+    <div class="modal fade" id="addModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="Modaltitle"></h4>
+          </div>
+          <div class="modal-body">
+            <form id="invoiceForm" name="invoiceForm" class="form-horizontal">
+              <input type="hidden" name="id" id="id">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">UserID</label>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" id="user_id" name="user_id" placeholder="Enter User ID" value="" required="">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Invoice Date</label>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" id="invoiceDate" name="invoiceDate" required="" placeholder="Enter Invoice Date" class="form-control"></input>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Invoice Due</label>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" id="invoiceDue" name="invoiceDue" required="" placeholder="Enter Invoice Due" class="form-control"></input>
+                </div>
+              </div>
+
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- jQuery -->
     <script src="{{asset('/plugins/jquery/jquery.min.js')}}"></script>
     <!-- Bootstrap -->
@@ -267,16 +300,28 @@ to get the desired effect
     <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('jquery.validate.min.js')}}" integrity="sha256-sPB0F50YUDK0otDnsfNHawYmA5M0pjjUf4TvRJkGFrI=" crossorigin="anonymous"></script>
+    <script src="{{asset('sweetalert2@9.js')}}"></script>
     <!-- AdminLTE -->
     <script src="{{asset('/dist/js/adminlte.js')}}"></script>
 
     <script type="text/javascript">
       $(document).ready(function() {
-        var table = $('#invoice-table').DataTable({
-          "processing": true,
-          "serverSide": true,
-          ajax: "{{url('invoice')}}",
-          type: 'GET',
+        $.ajaxSetup({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+      });
+
+      $(document).ready(function() {
+        $('#invoice-table').DataTable({
+          processing: true,
+          serverSide: true,
+          ajax: {
+            url: "{{ url('invoice') }}",
+            type: 'GET'
+          },
           columns: [{
               data: 'user_id',
               name: 'user_id'
@@ -292,28 +337,113 @@ to get the desired effect
             {
               data: 'action',
               name: 'action'
-            }
+            },
+          ],
+          order: [
+            [0, 'asc']
           ]
         });
       });
+      /*  When user click add user button */
+      $('#add-invoice').click(function() {
+        $('#saveBtn').val("create-invoice");
+        $('#id').val('');
+        $('#invoiceForm').trigger("reset");
+        $('#Modaltitle').html("Add New Invoice");
+        $('#addModal').modal('show');
+      });
 
-      $('body').on('click', 'delete', function() {
-        var invoice_id = $(this).data("id");
-        if (confirm("Are You sure want to delete !")) {
-          $.ajax({
-            type: "get",
-            url: "{{ url('delete') }}" + '/' + invoice_id,
-            success: function(data) {
-              var oTable = $('#invoice-table').dataTable();
-              oTable.fnDraw(false);
-            },
-            error: function(data) {
-              console.log('Error:', data);
-            }
-          });
-        }
+      /* When click edit user */
+      $('body').on('click', '.editInvoice', function() {
+        var id = $(this).data('id');
+        $.get('invoice/' + id, function(data) {
+          $('#Modaltitle').html("Edit Invoice");
+          $('#saveBtn').val("editInvoice");
+          $('#addModal').modal('show');
+
+          $('#user_id').val(data.user_id);
+          $('#invoiceDate').val(data.invoiceDate);
+          $('#invoiceDue').val(data.invoiceDue);
+        })
+      });
+
+      if ($("#invoiceForm").length > 0) {
+        $("#invoiceForm").validate({
+
+          submitHandler: function(form) {
+
+            var actionType = $('#saveBtn').val();
+            $('#saveBtn').html('Saving..');
+
+            $.ajax({
+              data: $('#invoiceForm').serialize(),
+              url: "{{url('invoice')}}",
+              type: "POST",
+              dataType: 'json',
+              success: function(data) { //jika berhasil 
+                $('#invoiceForm').trigger("reset");
+                $('#addModal').modal('hide');
+                $('#saveBtn').html('Save');
+                var oTable = $('#invoice-table').dataTable();
+                oTable.fnDraw(false); //reset datatable
+                Swal.fire(
+                  'Done!',
+                  'Data Saved Successfully!',
+                  'success')
+              },
+              error: function(data) {
+                console.log('Error:', data);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                })
+              }
+            });
+
+          }
+        })
+      }
+
+      $(document).on('click', '.delete', function() {
+        id = $(this).attr('id');
+        Swal.fire({
+          title: 'Are you sure ?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              type: "DELETE",
+              url: "{{ url('invoice') }}" + '/' + id,
+              success: function(data) {
+                var oTable = $('#invoice-table').dataTable();
+                oTable.fnDraw(false);
+                Swal.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                )
+              },
+              error: function(data) {
+                console.log('Error:', data);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                })
+              }
+            });
+          } else {
+            Swal.fire('Your data is safe');
+          }
+        });
       });
     </script>
-</body>
+  </body>
 
 </html>

@@ -14,19 +14,16 @@ class InvoiceController extends Controller
      */
     public function index()
     {
+        $invoice = Invoice::all();
         if (request()->ajax()) {
-            return datatables()->of(Invoice::select([
-                'user_id', 'invoiceDate', 'invoiceDue'
-            ]))
+            return datatables()->of($invoice)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
 
-                    $editUrl = url('update/' . $data->id);
-                    $btn = '<a href="' . $editUrl . '" data-toggle="tooltip" data-original-title="Edit" class="edit btn btn-primary btn-sm">Edit</a>';
-
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteTodo">Delete</a>';
-
-                    return $btn;
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-info btn-sm editInvoice"><i class="far fa-edit"></i> Edit</a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<button type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm " ><i class="far fa-trash-alt"></i> Delete</button>';
+                    return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -51,21 +48,17 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required',
-            'invoiceDate' => 'required',
-            'invoiceDue' => 'required',
-        ]);
-
-        $invoice = $request->all();
-        $invo = Invoice::create($invoice);
-        $invo->save();
-        if ($invo) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Invoice Created'
-            ]);
-        }
+        $invoice = Invoice::updateOrCreate(
+            [
+                'id' => $request->id
+            ],
+            [
+                'user_id'  => $request->user_id,
+                'invoiceDate' => $request->invoiceDate,
+                'invoiceDue' => $request->invoiceDue
+            ]
+        );
+        return response()->json(['success' => 'Invoice created successfully.', 'data' => $invoice]);
     }
 
     /**
@@ -98,20 +91,10 @@ class InvoiceController extends Controller
      * @param  \App\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        $invoice = Invoice::findOrFail($id);
-
-        $invoice->user_id = $request->user_id;
-        $invoice->invoiceDate = $request->invoiceDate;
-        $invoice->invoiceDue = $request->invoiceDue;
-
-        $invoice->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Invoice Updated'
-        ]);
+        $invoice = Invoice::find($id);
+        return response()->json($invoice);
     }
 
     /**
@@ -122,7 +105,7 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::find($id);
         $invoice->delete();
 
         return response()->json([
