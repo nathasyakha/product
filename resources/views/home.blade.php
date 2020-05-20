@@ -30,3 +30,16 @@
 
 
 @endsection
+
+@push('script')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                "Authorization": 'Bearer' + localStorage.getItem("laravel_token")
+            },
+        });
+        console.log(localStorage.getItem("laravel_token"));
+    });
+</script>
+@endpush

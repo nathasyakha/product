@@ -5,9 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
-    <meta name="api_token" content="{{(Auth::user())?Auth::user()->api_token : '' }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Font Awesome Icons -->
@@ -18,6 +15,8 @@
     <link rel="stylesheet" href="{{asset('/dist/css/adminlte.min.css')}}">
     <!-- Google Font: Source Sans Pro -->
     <link href="{{asset('/css.css')}}" rel="stylesheet">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
 </head>
 
 <body>
@@ -76,6 +75,14 @@
             @yield('content')
         </main>
     </div>
+    <!-- jQuery -->
+    <script src="{{asset('/plugins/jquery/jquery.min.js')}}"></script>
+    <!-- Bootstrap -->
+    <script src="{{asset('/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <!-- AdminLTE -->
+    <script src="{{asset('/dist/js/adminlte.js')}}"></script>
+
+    @stack('script')
 </body>
 
 </html>

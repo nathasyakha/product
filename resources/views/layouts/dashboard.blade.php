@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Simulasi</title>
 
@@ -20,18 +19,7 @@
     <link rel="stylesheet" href="{{asset('/dist/css/adminlte.min.css')}}">
     <!-- Google Font: Source Sans Pro -->
     <link href="{{asset('/css.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" integrity="sha256-pODNVtK3uOhL8FUNWWvFQK0QoQoV3YA9wGGng6mbZ0E=" crossorigin="anonymous" />
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to to the body tag
-to get the desired effect
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -64,6 +52,10 @@ to get the desired effect
 
             <!--Right navbar links -->
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{url('logout')}}" class="nav-link">Logout</a>
+                </li>
+
                 <!-- Messages Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
@@ -247,15 +239,11 @@ to get the desired effect
     <script src="{{asset('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
     <script src="{{asset('jquery.validate.min.js')}}" integrity="sha256-sPB0F50YUDK0otDnsfNHawYmA5M0pjjUf4TvRJkGFrI=" crossorigin="anonymous"></script>
-    <script src="{{('sweetalert2@9.js')}}"></script>
+    <script src="{{asset('sweetalert2@9.js')}}"></script>
     <!-- AdminLTE -->
     <script src="{{asset('/dist/js/adminlte.js')}}"></script>
 
-    <!-- OPTIONAL SCRIPTS -->
-    <script src="{{asset('/plugins/chart.js/Chart.min.js')}}"></script>
-    <script src="{{asset('/dist/js/demo.js')}}"></script>
-    <script src="{{asset('/dist/js/pages/dashboard3.js')}}"></script>
-
+    @stack('script')
 </body>
 
 </html>

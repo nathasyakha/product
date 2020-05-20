@@ -15,12 +15,14 @@ class UserController extends Controller
     public function login(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            //return response
+            $user = Auth::user();
             $response = [
                 'success' => true,
                 'message' => 'User login successful',
+                'user'  =>  $user, // optional
+                'token' =>  $user->createToken('laravel_token')->accessToken // token available ke blade
             ];
-            return response()->json($response, 200);
+            return redirect()->route('home');
         } else {
             //return response
             $response = [
@@ -30,7 +32,6 @@ class UserController extends Controller
             return response()->json($response, 404);
         }
     }
-
     public function register(Request $request)
     {
         //validate
@@ -74,15 +75,13 @@ class UserController extends Controller
     }
 
 
-    public function logout(Request $request)
+    public function logout()
     {
-        $request->user()->token()->revoke();
-        $response = [
-            'success' => true,
-            'message' => 'You have been succesfully logged out!',
-        ];
-        return response()->json($response, 200);
+        Auth::logout();
+
+        return redirect()->route('login');
     }
+
 
     public function index()
     {
